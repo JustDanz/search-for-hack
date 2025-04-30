@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Search For Hack</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Add FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f4f4f4;
+      --text-color: #333;
+      --header-bg: linear-gradient(135deg, #3498db, #2c3e50);
+      --card-bg: white;
+      --card-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      --button-bg: #2980b9;
+      --button-hover: #21618c;
+      --button-active: #1a5276;
+      --source-bg: #e0f7fa;
+      --source-color: #00838f;
+      --link-color: #3498db;
+      --log-bg: #f8f9fa;
+      --log-border: #e0e0e0;
+      --accent-color: #3498db;
+      --success-color: #2ecc71;
+    }
+
+    .dark-mode {
+      --bg-color: #121212;
+      --text-color: #f0f0f0;
+      --header-bg: linear-gradient(135deg, #2c3e50, #1a1a2e);
+      --card-bg: #1e1e1e;
+      --card-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      --button-bg: #34495e;
+      --button-hover: #2c3e50;
+      --button-active: #1a252f;
+      --source-bg: #003d4d;
+      --source-color: #4fb3bf;
+      --link-color: #4dabf7;
+      --log-bg: #252525;
+      --log-border: #444;
+      --accent-color: #4dabf7;
+      --success-color: #27ae60;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--header-bg);
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+
+    .logo-icon {
+      font-size: 2.5rem;
+      color: var(--accent-color);
+      background: rgba(255,255,255,0.1);
+      padding: 10px;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.2em;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      margin: 5px 0 0;
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 25px;
+      flex-wrap: wrap;
+      gap: 20px;
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .category-buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .category-button {
+      padding: 12px 24px;
+      background-color: var(--button-bg);
+      color: white;
+      border: none;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .category-button:hover {
+      background-color: var(--button-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .category-button.active {
+      background-color: var(--button-active);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .subcategory-buttons {
+      display: none;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .subcategory-button {
+      padding: 10px 18px;
+      background-color: var(--button-bg);
+      color: white;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .subcategory-button:hover {
+      background-color: var(--button-hover);
+    }
+
+    .subcategory-button.active {
+      background-color: var(--button-active);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    #generateButton {
+      padding: 14px 32px;
+      background: linear-gradient(135deg, var(--success-color), #219653);
+      color: white;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #generateButton:hover {
+      background: linear-gradient(135deg, #27ae60, #1e8449);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    #toggleDarkMode {
+      padding: 12px 18px;
+      background-color: var(--button-bg);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+
+    #toggleDarkMode:hover {
+      background-color: var(--button-hover);
+    }
+
+    .news-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+      padding: 25px;
+    }
+
+    .news-card {
+      background-color: var(--card-bg);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s, box-shadow 0.3s;
+      border-left: 5px solid var(--accent-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .news-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent-color), transparent);
+    }
+
+    .news-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+
+    .news-card h3 {
+      font-size: 1.3em;
+      margin: 0 0 15px 0;
+      color: var(--text-color);
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .news-card .meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      font-size: 14px;
+      color: #7f8c8d;
+      align-items: center;
+    }
+
+    .news-card .source {
+      background-color: var(--source-bg);
+      padding: 4px 10px;
+      border-radius: 20px;
+      color: var(--source-color);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .news-card p {
+      font-size: 15px;
+      color: var(--text-color);
+      opacity: 0.9;
+      line-height: 1.6;
+      flex-grow: 1;
+      margin-bottom: 20px;
+    }
+
+    .news-card .actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: auto;
+      align-items: center;
+    }
+
+    .news-card a {
+      text-decoration: none;
+      color: var(--link-color);
+      font-weight: 600;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+    }
+
+    .news-card a:hover {
+      color: var(--button-hover);
+      text-decoration: underline;
+    }
+
+    #logContainer {
+      margin: 25px;
+      padding: 20px;
+      background-color: var(--log-bg);
+      border-radius: 12px;
+      height: 180px;
+      overflow-y: auto;
+      font-size: 14px;
+      white-space: pre-wrap;
+      border: 1px solid var(--log-border);
+      font-family: 'Courier New', monospace;
+      box-shadow: var(--card-shadow);
+    }
+
+    #logContainer p {
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+    }
+
+    .log-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      align-items: center;
+    }
+
+    .log-header p {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #clearLog {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+
+    #clearLog:hover {
+      background-color: #c0392b;
+      transform: translateY(-1px);
+    }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .spinner {
+      border: 5px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top: 5px solid var(--accent-color);
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    .loading-text {
+      font-size: 16px;
+      color: var(--text-color);
+      font-weight: 500;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-color);
+      opacity: 0.7;
+      font-size: 16px;
+      grid-column: 1 / -1;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: var(--accent-color);
+    }
+
+    .credits {
+      text-align: center;
+      padding: 20px;
+      background-color: var(--card-bg);
+      margin: 25px;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      font-size: 14px;
+    }
+
+    .credits h3 {
+      margin-bottom: 15px;
+      color: var(--accent-color);
+    }
+
+    .credit-list {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .credit-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .credit-item a {
+      color: var(--link-color);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .credit-item a:hover {
+      text-decoration: underline;
+      color: var(--button-hover);
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.8em;
+      }
+
+      .logo-icon {
+        font-size: 2rem;
+        width: 50px;
+        height: 50px;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+        margin: 15px;
+        padding: 15px;
+      }
+
+      .category-buttons {
+        flex-direction: column;
+      }
+
+      .action-buttons {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      #generateButton, #toggleDarkMode {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .news-container {
+        grid-template-columns: 1fr;
+        padding: 15px;
+        gap: 20px;
+      }
+
+      #logContainer {
+        margin: 15px;
+        height: 200px;
+      }
+
+      .credit-list {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--log-bg);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--button-bg);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--button-hover);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-container">
+    <div class="logo-icon">
+      <i class="fas fa-search-location"></i>
+    </div>
+    <div>
+      <h1>SEARCH FOR HACK</h1>
+      <p>Your Ultimate Cybersecurity News Aggregator</p>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <div>
+    <div class="category-buttons">
+      <button onclick="setCategory('indonesia')" class="category-button active">
+        <i class="fas fa-flag"></i> Berita Indonesia
+      </button>
+      <button onclick="setCategory('international')" class="category-button">
+        <i class="fas fa-globe"></i> Berita Internasional
+      </button>
+      <button onclick="setCategory('medium')" class="category-button">
+        <i class="fab fa-medium"></i> Medium Blog
+      </button>
+    </div>
+    <div id="subcategoryButtons" class="subcategory-buttons"></div>
+  </div>
+  <div class="action-buttons">
+    <button id="toggleDarkMode" onclick="toggleDarkMode()">
+      <i class="fas fa-moon"></i> Dark Mode
+    </button>
+    <button id="generateButton" onclick="loadNews()">
+      <i class="fas fa-sync-alt"></i> Generate Berita
+    </button>
+  </div>
+</div>
+
+<div class="news-container" id="newsContainer">
+  <div class="empty-state">
+    <i class="fas fa-newspaper"></i>
+    <p>Klik tombol "Generate Berita" untuk melihat berita terbaru</p>
+  </div>
+</div>
+
+<div id="logContainer">
+  <div class="log-header">
+    <p><i class="fas fa-terminal"></i> <strong>Log Output:</strong></p>
+    <button id="clearLog" onclick="clearLog()">
+      <i class="fas fa-trash-alt"></i> Clear Log
+    </button>
+  </div>
+  <p id="logOutput">Sistem siap. Pilih kategori dan klik "Generate Berita" untuk memulai.</p>
+</div>
+
+<div class="credits">
+  <h3>Developed by:</h3>
+  <div class="credit-list">
+    <div class="credit-item">
+      <i class="fas fa-user"></i>
+      <span>Muhammad Dani Setiawan</span>
+      <a href="https://www.linkedin.com/in/muhammad-dani-setiawan" target="_blank">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </div>
+    <div class="credit-item">
+      <i class="fas fa-user"></i>
+      <span>Varel Valensio</span>
+      <a href="https://www.linkedin.com/in/varel-valensio" target="_blank">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </div>
+    <div class="credit-item">
+      <i class="fas fa-user"></i>
+      <span>Ahmad Danish Putra</span>
+      <a href="https://www.linkedin.com/in/ahmad-danish-putra-35ab5827a/" target="_blank">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedCategory = 'indonesia';
+let darkMode = false;
+const { jsPDF } = window.jspdf;
+
+const rssFeeds = {
+  international: {
+    'Cybersecurity': [
+      "https://thehackernews.com/rss",
+      "https://www.bleepingcomputer.com/feed/",
+      "https://securityaffairs.co/wordpress/feed",
+      "https://www.securityweek.com/feed"
+    ],
+    'Technology': [
+      "https://feeds.feedburner.com/TechCrunch/",
+      "https://www.wired.com/feed/rss"
+    ]
+  },
+  indonesia: {
+    'Teknologi': [
+      "https://tekno.kompas.com/rss",
+      "https://inet.detik.com/rss",
+      "https://blog.revolusiber.or.id/"
+    ]
+  },
+  medium: {
+    'Cybersecurity': [
+      "https://medium.com/feed/tag/cybersecurity",
+      "https://medium.com/feed/tag/security",
+    ],
+    'Hacking': [
+      "https://medium.com/feed/tag/hacking",
+      "https://medium.com/feed/tag/ethical-hacking"
+    ],
+    'Bug Bounty': [
+     "https://medium.com/feed/tag/bug-bounty",
+    "https://medium.com/feed/tag/poc-bug-bounty"
+    ],
+    'Penetration Tester': [
+     "https://medium.com/feed/tag/pentest",
+    "https://medium.com/feed/tag/red-team",
+    "https://medium.com/feed/tag/cve"
+    ]
+  }
+};
+
+let allNews = [];
+
+function setCategory(category) {
+  selectedCategory = category;
+  document.querySelectorAll('.category-button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.querySelector(`.category-button[onclick="setCategory('${category}')"]`).classList.add('active');
+  
+  // Update subcategories
+  const subcategoryContainer = document.getElementById('subcategoryButtons');
+  subcategoryContainer.innerHTML = '';
+  subcategoryContainer.style.display = 'flex';
+  
+  const subcategories = Object.keys(rssFeeds[category]);
+  subcategories.forEach(subcat => {
+    const button = document.createElement('button');
+    button.className = 'subcategory-button';
+    
+    // Add icon based on subcategory
+    let iconClass = 'fas fa-shield-alt'; // default icon
+    if (subcat.includes('Tech') || subcat.includes('Tekno')) iconClass = 'fas fa-microchip';
+    if (subcat.includes('Bug')) iconClass = 'fas fa-bug';
+    if (subcat.includes('Penetration')) iconClass = 'fas fa-user-secret';
+    
+    button.innerHTML = `<i class="${iconClass}"></i> ${subcat}`;
+    button.onclick = () => setSubcategory(subcat);
+    subcategoryContainer.appendChild(button);
+  });
+  
+  // Activate first subcategory by default
+  if (subcategories.length > 0) {
+    setSubcategory(subcategories[0]);
+  }
+  
+  logMessage(`Kategori dipilih: ${category}`);
+}
+
+function setSubcategory(subcategory) {
+  document.querySelectorAll('.subcategory-button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.querySelectorAll('.subcategory-button').forEach(btn => {
+    if (btn.textContent.includes(subcategory)) {
+      btn.classList.add('active');
+    }
+  });
+  logMessage(`Subkategori dipilih: ${subcategory}`);
+}
+
+function toggleDarkMode() {
+  darkMode = !darkMode;
+  if (darkMode) {
+    document.body.classList.add('dark-mode');
+    document.getElementById('toggleDarkMode').innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+    logMessage("Dark mode diaktifkan");
+  } else {
+    document.body.classList.remove('dark-mode');
+    document.getElementById('toggleDarkMode').innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+    logMessage("Light mode diaktifkan");
+  }
+}
+
+async function loadNews() {
+  const container = document.getElementById("newsContainer");
+  container.innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      <div class="loading-text">Mengambil berita terbaru...</div>
+    </div>
+  `;
+  
+  logMessage("Memulai pencarian berita...");
+  allNews = [];
+
+  // Get active subcategory
+  const activeSubcategory = document.querySelector('.subcategory-button.active')?.textContent?.replace(/^\s+|\s+$/g, '');
+  if (!activeSubcategory) {
+    logMessage("Error: Tidak ada subkategori yang dipilih");
+    container.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>Silakan pilih subkategori terlebih dahulu</p>
+      </div>
+    `;
+    return;
+  }
+
+  const selectedFeeds = rssFeeds[selectedCategory][activeSubcategory];
+
+  const promises = selectedFeeds.map(feed => {
+    logMessage(`Mengambil data dari: ${feed}`);
+    return fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}`)
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        if (!data.items) {
+          logMessage(`Format data tidak valid dari: ${feed}`);
+          return [];
+        }
+        logMessage(`Berhasil mengambil ${data.items.length} berita dari: ${data.feed?.title || feed}`);
+        return data.items.map(item => ({
+          title: item.title,
+          link: item.link,
+          pubDate: new Date(item.pubDate),
+          description: cleanDescription(item.description),
+          source: data.feed?.title || new URL(feed).hostname.replace('www.', ''),
+          category: selectedCategory,
+          subcategory: activeSubcategory
+        }));
+      })
+      .catch(err => {
+        logMessage(`Gagal mengambil data dari: ${feed}. Error: ${err.message}`);
+        return [];
+      });
+  });
+
+  logMessage("Menunggu respons dari semua sumber berita...");
+  const results = await Promise.all(promises);
+
+  allNews = results.flat().filter(item => item.title && item.link);
+  logMessage(`Berhasil mengumpulkan total ${allNews.length} berita.`);
+  allNews.sort((a, b) => b.pubDate - a.pubDate);
+  renderNews(allNews);
+}
+
+function cleanDescription(html) {
+  if (!html) return '';
+  // Remove HTML tags
+  let text = html.replace(/(<([^>]+)>)/gi, "");
+  // Trim and limit length
+  text = text.trim();
+  if (text.length > 200) {
+    text = text.substring(0, 200) + '...';
+  }
+  return text;
+}
+
+function renderNews(newsList) {
+  const container = document.getElementById("newsContainer");
+  container.innerHTML = "";
+
+  if (newsList.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-search"></i>
+        <p>Tidak ada berita terbaru yang ditemukan</p>
+      </div>
+    `;
+    logMessage("Tidak ada berita untuk ditampilkan.");
+    return;
+  }
+
+  logMessage(`Menampilkan ${newsList.length} berita...`);
+
+  newsList.forEach(news => {
+    const card = document.createElement("div");
+    card.className = "news-card";
+    card.innerHTML = `
+      <h3>${news.title}</h3>
+      <div class="meta">
+        <span><i class="far fa-calendar-alt"></i> ${news.pubDate.toLocaleDateString('id-ID', { 
+          day: 'numeric', 
+          month: 'long', 
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })}</span>
+        <span class="source"><i class="fas fa-tag"></i> ${news.source}</span>
+      </div>
+      <p>${news.description}</p>
+      <div class="actions">
+        <a href="${news.link}" target="_blank">
+          <i class="fas fa-external-link-alt"></i> Baca Selengkapnya
+        </a>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function logMessage(message) {
+  const now = new Date();
+  const timestamp = now.toLocaleTimeString('id-ID', { 
+    hour: '2-digit', 
+    minute: '2-digit', 
+    second: '2-digit' 
+  });
+  
+  const logContainer = document.getElementById("logOutput");
+  logContainer.innerHTML += `[${timestamp}] ${message}\n`;
+  logContainer.scrollTop = logContainer.scrollHeight;
+}
+
+function clearLog() {
+  document.getElementById("logOutput").innerHTML = "Log cleared\n";
+  logMessage("Log telah dibersihkan");
+}
+
+// Initialize
+setCategory('indonesia');
+</script>
+
+</body>
+</html>
