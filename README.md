@@ -20,3 +20,27 @@
 - RSS2JSON API (`https://api.rss2json.com/v1/api.json`)
 - FontAwesome, Google Fonts
 - jsPDF & html2canvas (sudah di-include, namun belum digunakan secara aktif)
+
+## English 
+# Search For Hack
+
+**Search For Hack** is a web-based application that displays the latest news about cybersecurity and technology from various RSS sources such as The Hacker News, Bleeping Computer, Kompas Tekno, Medium, and others. The app features real-time news search by category and subcategory, with support for dark mode and system logs.
+
+## 🌐 Main Features
+
+- News Gatherer**: Displays news from various trusted sources in the field of technology and cybersecurity.
+- 🌍 **Categories & Subcategories**:
+  - Indonesia: Technology
+  - International: Cybersecurity, Technology
+  - Blog Medium: Cyber Security, Hacking, Bug Bounty, Penetration Testers
+- **Dark Mode**: Interactive dark mode for user convenience.
+- 📄 **SystemLog**: Displays real-time news retrieval activity.
+- 📰 **Modern Design**: Responsive and elegant UI with animations and FontAwesome icons.
+
+## 🛠️ Technologies Used
+
+- HTML5, CSS3 (no framework)
+- Pure JavaScript
+- RSS2JSON API (`https://api.rss2json.com/v1/api.json`)
+- FontAwesome, Google Fonts
+- jsPDF & html2canvas (included, but not actively used)
