@@ -27,6 +27,7 @@
       --log-border: #e0e0e0;
       --accent-color: #3498db;
       --success-color: #2ecc71;
+      --github-color: #333;
     }
 
     .dark-mode {
@@ -45,6 +46,7 @@
       --log-border: #444;
       --accent-color: #4dabf7;
       --success-color: #27ae60;
+      --github-color: #f0f0f0;
     }
 
     body {
@@ -438,19 +440,46 @@
 
     .credit-item {
       display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 15px;
+      background-color: rgba(0,0,0,0.05);
+      border-radius: 8px;
+      min-width: 200px;
+    }
+
+    .credit-name {
+      font-weight: 600;
+      display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .credit-item a {
-      color: var(--link-color);
-      text-decoration: none;
-      transition: all 0.3s;
+    .credit-links {
+      display: flex;
+      gap: 15px;
     }
 
-    .credit-item a:hover {
-      text-decoration: underline;
-      color: var(--button-hover);
+    .credit-links a {
+      color: var(--text-color);
+      text-decoration: none;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .credit-links a:hover {
+      transform: translateY(-2px);
+    }
+
+    .linkedin-link {
+      color: #0a66c2;
+    }
+
+    .github-link {
+      color: var(--github-color);
     }
 
     @media (max-width: 768px) {
@@ -584,25 +613,43 @@
   <h3>Developed by:</h3>
   <div class="credit-list">
     <div class="credit-item">
-      <i class="fas fa-user"></i>
-      <span>Muhammad Dani Setiawan</span>
-      <a href="https://www.linkedin.com/in/muhammad-dani-setiawan" target="_blank">
-        <i class="fab fa-linkedin"></i>
-      </a>
+      <div class="credit-name">
+        <i class="fas fa-user"></i>
+        <span>Muhammad Dani Setiawan</span>
+      </div>
+      <div class="credit-links">
+        <a href="https://www.linkedin.com/in/muhammad-dani-setiawan" target="_blank" class="linkedin-link">
+          <i class="fab fa-linkedin"></i> LinkedIn
+        </a>
+        <a href="https://github.com/JustDanz" target="_blank" class="github-link">
+          <i class="fab fa-github"></i> GitHub
+        </a>
+      </div>
     </div>
     <div class="credit-item">
-      <i class="fas fa-user"></i>
-      <span>Varel Valensio</span>
-      <a href="https://www.linkedin.com/in/varel-valensio" target="_blank">
-        <i class="fab fa-linkedin"></i>
-      </a>
+      <div class="credit-name">
+        <i class="fas fa-user"></i>
+        <span>Varel Valensio</span>
+      </div>
+      <div class="credit-links">
+        <a href="https://www.linkedin.com/in/varel-valensio" target="_blank" class="linkedin-link">
+          <i class="fab fa-linkedin"></i> LinkedIn
+        </a>
+        <a href="https://github.com/0xc4t" target="_blank" class="github-link">
+          <i class="fab fa-github"></i> GitHub
+        </a>
+      </div>
     </div>
     <div class="credit-item">
-      <i class="fas fa-user"></i>
-      <span>Ahmad Danish Putra</span>
-      <a href="https://www.linkedin.com/in/ahmad-danish-putra-35ab5827a/" target="_blank">
-        <i class="fab fa-linkedin"></i>
-      </a>
+      <div class="credit-name">
+        <i class="fas fa-user"></i>
+        <span>Ahmad Danish Putra</span>
+      </div>
+      <div class="credit-links">
+        <a href="https://www.linkedin.com/in/ahmad-danish-putra-35ab5827a/" target="_blank" class="linkedin-link">
+          <i class="fab fa-linkedin"></i> LinkedIn
+        </a>
+      </div>
     </div>
   </div>
 </div>
@@ -628,8 +675,7 @@ const rssFeeds = {
   indonesia: {
     'Teknologi': [
       "https://tekno.kompas.com/rss",
-      "https://inet.detik.com/rss",
-      "https://blog.revolusiber.or.id/"
+      "https://inet.detik.com/rss"
     ]
   },
   medium: {
